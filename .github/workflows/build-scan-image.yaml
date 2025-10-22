@@ -31,6 +31,20 @@ jobs:
           cd ./${{ env.working-folder }}/
           docker build -t ${{ env.image-name }} .
           
+      - name: Check if secret is empty
+        run: |
+          if [ -z "${{ secrets.AQUA_REGISTRY_USER }}" ]; then
+            echo "AQUA_REGISTRY_USER is empty!"
+            exit 1
+          else
+            echo "AQUA_REGISTRY_USER is set."
+          fi
+          if [ -z "${{ secrets.AQUA_REGISTRY_PASSWORD }}" ]; then
+            echo "AQUA_REGISTRY_PASSWORD is empty!"
+            exit 1
+          else
+            echo "AQUA_REGISTRY_PASSWORD is set."
+          fi
       
       - name: Login to Aqua Registry
         # run: docker login registry.aquasec.com -u ${{ secrets.AQUA_REGISTRY_USER }} -p ${{ secrets.AQUA_REGISTRY_PASSWORD }}
