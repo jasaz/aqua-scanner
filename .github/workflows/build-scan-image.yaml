@@ -1,0 +1,45 @@
+name: Build and Scan Image
+
+on:
+  workflow_call:
+    inputs: 
+      working-folder:
+        type: string
+        required: true
+        description: Git folder for application code
+      image-name:
+        type: string
+        required: true
+        description: Name of the container image
+      scan-output-file:
+        type: string
+        required: true
+        description: Output of the scan file
+jobs:
+  build-scan-image:
+    runs-on: ubuntu-latest
+    env:
+      working-folder: ${{ inputs.working-folder }}
+      image-name:  ${{ inputs.image-name }}
+      scan-output-file: ${{ inputs.scan-output-file }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Build Container image
+        run: | 
+          cd ./${{ env.working-folder }}/
+          docker build -t ${{ env.image-name }} .
+          
+      
+      - name: Login to Aqua Registry
+        run: docker login registry.aquasec.com -u ${{ secrets.AQUA_REGISTRY_USER }} -p ${{ secrets.AQUA_REGISTRY_PASSWORD }}
+
+      - name: Pull Aqua Scanner
+        run: docker pull registry.aquasec.com/scanner:latest-saas
+
+      - name: Run Aqua Image Scan
+        run: docker run -e SCALOCK_LOG_LEVEL=DEBUG --rm -v /var/run/docker.sock:/var/run/docker.sock registry.aquasec.com/scanner:latest-saas scan -H ${{ secrets.AQUA_CONSOLE_AP_URL }} --token ${{ secrets.AQUA_SCANNER_AP_TOKEN }} --local ${{ env.image-name }} --register-compliant
+        
+      # - name: Output Vulnerabilities
+      #   run: cat ${{ env.scan-output-file }}
