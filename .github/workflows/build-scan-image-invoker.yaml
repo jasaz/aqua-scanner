@@ -1,0 +1,25 @@
+name: Invoke Scan
+on:
+  workflow_dispatch:
+
+jobs:
+  python-step-1:
+    uses: ./.github/workflows/build-scan-image.yaml
+    with:
+      working-folder: ./code-to-scan/python/step-1
+      image-name: python-flask-step1
+      scan-output-file: python-flask-step1-output
+      
+  python-step-2:
+    uses: ./.github/workflows/build-scan-image.yaml
+    with:
+      working-folder: ./code-to-scan/python/step-2
+      image-name: python-flask-step2
+      scan-output-file: python-flask-step2-output
+      
+  python-step-3:
+    uses: ./.github/workflows/build-scan-image.yaml
+    with:
+      working-folder: ./code-to-scan/python/step-3
+      image-name: python-flask-step3
+      scan-output-file: python-flask-step3-output
