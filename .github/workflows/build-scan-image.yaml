@@ -54,7 +54,7 @@ jobs:
         run: docker pull registry.aquasec.com/scanner:latest-saas
 
       - name: Run Aqua Image Scan
-        run: docker run -e SCALOCK_LOG_LEVEL=DEBUG --rm -v /var/run/docker.sock:/var/run/docker.sock registry.aquasec.com/scanner:latest-saas scan -H ${{ secrets.AQUA_CONSOLE_AP_URL }} --token ${{ secrets.AQUA_SCANNER_AP_TOKEN }} --local ${{ env.image-name }} --register-compliant
+        run: docker run -e SCALOCK_LOG_LEVEL=DEBUG --rm -v /var/run/docker.sock:/var/run/docker.sock registry.aquasec.com/scanner:latest-saas scan -H ${{ secrets.AQUA_CONSOLE_AP_URL }} --token ${{ secrets.AQUA_SCANNER_AP_TOKEN }} --local ${{ env.image-name }} --register sandip-registry
         
       # - name: Output Vulnerabilities
       #   run: cat ${{ env.scan-output-file }}
