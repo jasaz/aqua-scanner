@@ -13,9 +13,9 @@ RUN python3 -m pip install -r requirements.txt
 FROM docker.io/jasaz/wolfi-python:wolfi-python3-13 as final-stage
 
 WORKDIR /app
-COPY --from=build-stage /home/py_user/.local /home/non-root/.local # Check the Working directory path in the respective base images.
+COPY --from=build-stage /home/app/.local /home/non-root/.local # Check the Working directory path in the respective base images.
 COPY --from=build-stage /app /app
 
-ENV PATH=/bin:/usr/bin:/home/nonroot/.local/bin
+ENV PATH=/bin:/usr/bin:/home/non-root/.local/bin
 
 ENTRYPOINT ["python", "flask-demo.py"]
