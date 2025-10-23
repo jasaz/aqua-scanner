@@ -22,6 +22,7 @@ jobs:
       working-folder: ${{ inputs.working-folder }}
       image-name:  ${{ inputs.image-name }}
       scan-output-file: ${{ inputs.scan-output-file }}
+      aqua-registry: "sandip-registry"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,7 +55,7 @@ jobs:
         run: docker pull registry.aquasec.com/scanner:latest-saas
 
       - name: Run Aqua Image Scan
-        run: docker run -e SCALOCK_LOG_LEVEL=DEBUG --rm -v /var/run/docker.sock:/var/run/docker.sock registry.aquasec.com/scanner:latest-saas scan -H ${{ secrets.AQUA_CONSOLE_AP_URL }} --token ${{ secrets.AQUA_SCANNER_AP_TOKEN }} --local ${{ env.image-name }} --register sandip-registry
+        run: docker run -e SCALOCK_LOG_LEVEL=DEBUG --rm -v /var/run/docker.sock:/var/run/docker.sock registry.aquasec.com/scanner:latest-saas scan -H ${{ secrets.AQUA_CONSOLE_AP_URL }} --token ${{ secrets.AQUA_SCANNER_AP_TOKEN }} --local ${{ env.image-name }} --registry ${{ env.aqua-registry }} --register
         
       # - name: Output Vulnerabilities
       #   run: cat ${{ env.scan-output-file }}
